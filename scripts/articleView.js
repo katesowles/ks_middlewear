@@ -13,12 +13,13 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  // The populateFilters method runs through the array of allAuthors and for each it finds the value of the 'author' key, if there are fewer than two instances found as dropdown options, that option value will be appended to the author-filter dropdown.
   articleView.populateFilters = function() {
     var options,
-      template = Handlebars.compile($('#option-template').text());
+        template = Handlebars.compile($('#option-template').text());
 
     // Example of using model method with FP, synchronous approach:
-    // NB: This method is dependant on info being in the DOM. Only authors of shown articles are loaded.
+    // NOTE: This method is dependant on info being in the DOM. Only authors of shown articles are loaded.
     options = Article.allAuthors().map(function(author) { return template({val: author}); });
     if ($('#author-filter option').length < 2) { // Prevent duplication
       $('#author-filter').append(options);
@@ -38,12 +39,14 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  // The handleFilters function looks to the filters list, and when the selected value for either dropdown is changed or a selection is made it sets resource equal to the id of the filter less the "-filter" portion, so "author" or "category", respectively. The page URL is then updated to "/[author OR category]/[author name OR category name, with spaces replaced by plus signs]"
   articleView.handleFilters = function() {
     $('#filters').on('change', 'select', function() {
       resource = this.id.replace('-filter', '');
       page('/' + resource + '/' + $(this).val().replace(/\W+/g, '+')); // Replace any/all whitespace with a +
     });
   };
+
   // articleView.handleAuthorFilter = function() {
   //   $('#author-filter').on('change', function() {
   //     if ($(this).val()) {
@@ -56,7 +59,7 @@
   //     $('#category-filter').val('');
   //   });
   // };
-  //
+
   // articleView.handleCategoryFilter = function() {
   //   $('#category-filter').on('change', function() {
   //     if ($(this).val()) {
@@ -70,7 +73,6 @@
   //   });
   // };
 
-  // DONE: Remove the setTeasers method, and replace with a plain ole link in the article template.
   // articleView.setTeasers = function() {
   //   $('.article-body *:nth-of-type(n+2)').hide();
   //
@@ -118,6 +120,7 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  // the index function shows the container with the id of articles, identifies it's siblings, and then hides them. It then removes the article elements form inside the article container, and for each of the article data objects that are passed into the function, they're appended to the articles container.
   articleView.index = function(articles) {
     $('#articles').show().siblings().hide();
 
@@ -127,10 +130,8 @@
     });
 
     articleView.populateFilters();
-    // COMMENT: What does this method do?  What is it's execution path?
     articleView.handleFilters();
 
-    // DONE: Replace setTeasers with just the truncation logic, if needed:
     if ($('#articles article').length > 1) {
       $('.article-body *:nth-of-type(n+2)').hide();
     }
