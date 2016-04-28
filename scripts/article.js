@@ -91,6 +91,8 @@
     });
   };
 
+
+
   Article.findWhere = function(field, value, callback) {
     webDB.execute(
       [
@@ -99,7 +101,9 @@
           data: [value]
         }
       ],
-      callback
+      function(article) {
+        ctx.articles = article;
+        next();
     );
   };
 
